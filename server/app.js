@@ -3,7 +3,6 @@ const app = express();
 const dotenv = require('dotenv');
 const bodyParser = require('body-parser');
 dotenv.config();
-const User = require('./models/User');
 const bcrypt = require('bcrypt');
 
 // const path = require('path');

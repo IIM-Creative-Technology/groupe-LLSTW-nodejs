@@ -1,10 +1,11 @@
 <template>
+<div id="main">
   <div id="nav">
     <router-link to="/">Connexion</router-link> |
     <router-link to="/about">Messagerie</router-link>
   </div>
-      <router-view></router-view>
-
+  <router-view></router-view> 
+</div>
 </template>
 
 <script>
