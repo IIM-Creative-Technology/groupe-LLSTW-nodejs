@@ -1,15 +1,15 @@
 const express = require('express');
-const deployd = require('deployd');
+const app = express();
 
-// on lance le serveur via express et on charge les fichiers statiques
-const app  = express();
-app.get('/', function(req , res) {
-    res.sendFile(__dirname + "/index.html");
-    app.use('/static',express.static('static'))
-})
-app.listen(8080);
+// const path = require('path');
+const port = 4000;
+// app.use(express.static(path.join(__dirname, '../client/dist')))
 
-// on lance la bdd via deployd
-const options = {port: 1888, env : "development"};
-const dpd = deployd(options);
-dpd.listen();
+app.get('/', (req, res) => {
+  // res.sendFile(__dirname, '../client/dist/index.html');
+});
+  
+app.listen(port, () => {
+    console.log(`Server listening on the http://localhost:${port}`);
+});
+  
