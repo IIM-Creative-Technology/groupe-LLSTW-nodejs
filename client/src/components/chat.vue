@@ -26,32 +26,28 @@ export default {
                 username: this.username
             }).then(function(response) {
                 console.log(response);
+                document.getElementById('input').value = '';
             }).catch(function (error) {
                 console.log(error.response.data);
             });
-            /* Tentative d'une fonction différente, retourne une erreur.
-            (async () => {
-                let content = document.getElementById('input').value;
-                const rawResponse = await fetch(this.url_env +'/api/messages/create', {
-                    method: 'POST',
-                    headers: {
-                    'Accept': 'application/json',
-                    'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({content: content, username: this.username})
-                });
-                const response = await rawResponse.json();
-
-                console.log(response);
-                })
-            ();
-            */
+        },
+        getMessages() {
+            axios.get(this.url_env + '/api/messages')
+            .then(response => {
+                this.messages = response.data;
+            }).catch(error => {
+                console.log(error.response.data);
+            });
         }
     },
     created() {
-        axios.get(this.url_env + '/api/messages').then(response => {
-            this.messages = response.data;
-        });
+        if (localStorage.getItem('node_name') !== null) {
+            this.username = localStorage.getItem('node_name');
+            this.getMessages();
+        } else {
+            this.$router.push('/');
+        }
+       
     },
     data() {
         return {

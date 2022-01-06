@@ -1,16 +1,43 @@
 <template>
     <div>
     <h1>Connexion</h1>
-        <Input Type="Text" Name="email" V-Model="Input.Email" Placeholder="Email" /><br/>
-        <Input Type="Password" Name="Password" V-Model="Input.Password" Placeholder="Mot de passe" /><br/>
-        <button Type="Button" V-On:click="Login()">Connexion</button>
+        <Input Type="Text" Name="username" V-Model="Input.Username" Placeholder="Nom d'utilisateur" id="username" /><br/>
+        <Input Type="Password" Name="Password" V-Model="Input.Password" Placeholder="Mot de passe" id="password"/><br/>
+        <button Type="Button" @click="Login()">Connexion</button>
     </div>
 </template>
 
 <script>
-// @ is an alias to /src
+// import axios
+import axios from 'axios';
 
 export default {
+    data() {
+        return {
+            Input: {
+                Username: '',
+                Password: '',
+            },
+            url_env: 'http://localhost:4000',
+        };
+    },
+    methods: {
+        async Login() {
+            this.Password = document.getElementById('password').value;
+            this.Username = document.getElementById('username').value;
+            
+            axios.post(this.url_env + '/api/login', {
+                username: this.Username,
+                password: this.Password,
+            }).then(response => {
+                localStorage.setItem('node_name', response.data.username);
+                localStorage.setItem('node_token', response.data.id);
+                console.log(response.data.username);
+            }).catch(error => {
+                console.log(error.response.data);
+            });
+        },
+    },
   name: 'Login',
 }
 </script>

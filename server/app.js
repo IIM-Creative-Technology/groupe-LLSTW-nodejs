@@ -6,6 +6,14 @@ const bodyParser = require('body-parser');
 dotenv.config();
 const bcrypt = require('bcrypt');
 
+const { createServer } = require("http");
+const { Server } = require("socket.io");
+
+const httpServer = createServer(app);
+const io = new Server(httpServer, {});
+
+
+
 // const path = require('path');
 
 const MongoClient = require('mongodb').MongoClient;
@@ -23,6 +31,7 @@ app.use(function (req, res, next) {
     res.setHeader('Access-Control-Allow-Origin', '*');
 });
 */
+app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: false}));
 app.options('*', cors());
 
@@ -34,14 +43,47 @@ app.get('/api/messages', (req, res) => {
     res.setHeader('Access-Control-Allow-Origin', '*');
     client.connect(err => {
         const collection = client.db("IIM").collection("messages");
-        collection.find({}).toArray(function (err, result) {
+        collection.find({}).sort({datefield: -1}).toArray(function (err, result) {
             if (err) throw err;
-            console.log(result);
+            //console.log(result);
             res.send(result);
         });
     });
 });
 
+// login user from mongodb
+app.post('/api/login', (req, res) => {
+    res.setHeader('Access-Control-Allow-Origin', '*');
+    client.connect(async (err) => {
+        const password = req.body.password;
+        const username = req.body.username;
+
+        if (err) throw err;
+        const collection = client.db("IIM").collection("users");
+        const requestUser = await collection.findOne({username: username});
+        if (requestUser == null) {
+            res.send("User not found");
+        } else {
+            const compare = await bcrypt.compare(password, requestUser.password);
+            if (compare == true) {
+                console.log("password matched");
+                        res.send({
+                            username: requestUser.username,
+                            id: requestUser._id
+            });
+            } else {
+                console.log("password not matched");
+                        res.send({
+                            username: null,
+                            email: null,
+                            name: null,
+                            id: null
+                });
+            }
+        }
+    });
+});
+            
 
 // create new user in mongodb
 app.post('/api/users/create', (req, res) => {
@@ -76,18 +118,26 @@ app.post('/api/messages/create', (req, res) => {
     client.connect(async (err) => {
         const content = req.body.content;
         const username = req.body.username;
+        const id = req.body.id;
 
         console.log(content);
         console.log(username);
+        console.log(id);
 
         if (err) throw err;
         const collection = client.db("IIM").collection("messages");
-        if (content && username) {
-            collection.insertOne({ "content": content, "username": username, createdAt: new Date()});
-            res.status(200).send("Message created");
+        const requestUser = await collection.findOne({ "username": username, "id": id });
+        if (requestUser != null) {
+            if (content && username) {
+                collection.insertOne({ "content": content, "username": username, createdAt: new Date()});
+                res.status(200).send("Message created");
+            } else {
+                res.status(422).send('incomplete data');
+            }
         } else {
-            res.status(422).send('incomplete data');
+            res.status(400).send("User does not exist")
         }
+        
     });
 });
 
@@ -95,6 +145,15 @@ app.post('/', (req, res) => {
     // res.sendFile(__dirname, '../client/dist/index.html');
 });
 
+// socket.io on connection
+io.on('connection', (socket) => {
+    console.log('a user connected');
+    socket.on('disconnect', () => {
+        console.log('user disconnected');
+    });
+});
+
+httpServer.listen(3000);
 
 app.listen(port, () => {
     console.log(`Server listening on the http://localhost:${port}`);
