@@ -1,5 +1,6 @@
 const express = require('express');
 const app = express();
+const cors = require('cors')
 const dotenv = require('dotenv');
 const bodyParser = require('body-parser');
 dotenv.config();
@@ -17,13 +18,20 @@ const client = new MongoClient(process.env.URL, {
 const port = 4000;
 // app.use(express.static(path.join(__dirname, '../client/dist')))
 
-app.use(bodyParser.urlencoded({extended: false}))
+/*
+app.use(function (req, res, next) {
+    res.setHeader('Access-Control-Allow-Origin', '*');
+});
+*/
+app.use(bodyParser.urlencoded({extended: false}));
+app.options('*', cors());
 
 app.get('/', (req, res) => {
     // res.sendFile(__dirname, '../client/dist/index.html');
 });
 
-app.get('/messages', (req, res) => {
+app.get('/api/messages', (req, res) => {
+    res.setHeader('Access-Control-Allow-Origin', '*');
     client.connect(err => {
         const collection = client.db("IIM").collection("messages");
         collection.find({}).toArray(function (err, result) {
@@ -64,18 +72,19 @@ app.post('/api/users/create', (req, res) => {
     });
 });
 app.post('/api/messages/create', (req, res) => {
+    res.setHeader('Access-Control-Allow-Origin', '*');
     client.connect(async (err) => {
         const content = req.body.content;
         const username = req.body.username;
 
-        console.log(req.body.content);
-        console.log(req.body.username);
+        console.log(content);
+        console.log(username);
 
         if (err) throw err;
         const collection = client.db("IIM").collection("messages");
-        if (content) {
+        if (content && username) {
             collection.insertOne({ "content": content, "username": username, createdAt: new Date()});
-            res.send("Message created");
+            res.status(200).send("Message created");
         } else {
             res.status(422).send('incomplete data');
         }
