@@ -10,7 +10,14 @@ const { createServer } = require("http");
 const { Server } = require("socket.io");
 
 const httpServer = createServer(app);
-const io = new Server(httpServer, {});
+const io = new Server(httpServer, {
+    cors: {
+        origin: "http://localhost:8080",
+        methods: ["GET", "POST"],
+        allowedHeaders: ["Access-Control-Allow-Origin"],
+        credentials: true
+    }
+});
 
 
 
@@ -148,6 +155,18 @@ app.post('/', (req, res) => {
 // socket.io on connection
 io.on('connection', (socket) => {
     console.log('a user connected');
+
+    socket.on('chatMessage', () => {
+        client.connect(err => {
+            const collection = client.db("IIM").collection("messages");
+            collection.find({}).sort({datefield: -1}).toArray(function (err, result) {
+                if (err) throw err;
+                //console.log(result);
+                socket.emit('insertMessage', result.reverse()[0])
+            });
+        });
+    });
+
     socket.on('disconnect', () => {
         console.log('user disconnected');
     });
