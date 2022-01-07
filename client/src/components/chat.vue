@@ -72,7 +72,7 @@ export default {
     },
   },
   created() {
-    if ((localStorage.getItem('node_name') != null) or (localStorage.getItem('node_name') != undefined)) {
+    if (localStorage.getItem('node_name') != null) {
       this.username = localStorage.getItem('node_name');
       this.getMessages();
       socket.on('insertMessage', (data) => {

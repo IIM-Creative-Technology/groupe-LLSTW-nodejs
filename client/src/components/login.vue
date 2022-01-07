@@ -44,10 +44,14 @@ export default {
           password: this.Password,
         })
         .then((response) => {
-          localStorage.setItem('node_name', response.data.username);
-          localStorage.setItem('node_token', response.data.id);
-          console.log(response.data.username);
-          this.$router.push({ name: 'ViewChat' });
+          if (response.data.username == null) {
+            console.log("Ce user n'existe pas !");
+          } else {
+            localStorage.setItem('node_name', response.data.username);
+            localStorage.setItem('node_token', response.data.id);
+            console.log(response.data.username);
+            this.$router.push({ name: 'ViewChat' });
+          }
         })
         .catch((error) => {
           console.log(error.response.data);
