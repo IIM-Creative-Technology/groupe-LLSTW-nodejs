@@ -3,8 +3,10 @@ const app = express();
 const cors = require('cors')
 const dotenv = require('dotenv');
 const bodyParser = require('body-parser');
+const middleware = require('./middleware')
 dotenv.config();
 const bcrypt = require('bcrypt');
+const session = require("express-session");
 
 const { createServer } = require("http");
 const { Server } = require("socket.io");
@@ -38,8 +40,14 @@ app.use(function (req, res, next) {
     res.setHeader('Access-Control-Allow-Origin', '*');
 });
 */
+
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: false}));
+app.use(session({
+    secret: "IIM",
+    resave: true,
+    saveUninitialized: false
+}));
 app.options('*', cors());
 
 app.get('/', (req, res) => {
@@ -74,22 +82,21 @@ app.post('/api/login', (req, res) => {
             const compare = await bcrypt.compare(password, requestUser.password);
             if (compare == true) {
                 console.log("password matched");
-                        res.send({
-                            username: requestUser.username,
-                            id: requestUser._id
-            });
+                req.session.user = requestUser;
+                res.redirect("/");
             } else {
-                console.log("password not matched");
-                        res.send({
-                            username: null,
-                            email: null,
-                            name: null,
-                            id: null
-                });
+                res.send("Wrong password");
             }
         }
     });
 });
+
+app.get('/api/user', (req, res) => {
+    const user = req.session.userid
+    console.log(user);
+    res.send(user);
+});
+  
             
 
 // create new user in mongodb
@@ -147,6 +154,9 @@ app.post('/api/messages/create', (req, res) => {
         
     });
 });
+
+
+
 
 app.post('/', (req, res) => {
     // res.sendFile(__dirname, '../client/dist/index.html');
