@@ -9,6 +9,7 @@
       >
         <div>{{ message.content }}</div>
         <div>{{ message.username }}</div>
+        <div>{{ message.createdAt }}</div>
       </li>
     </ul>
     <form>
@@ -66,6 +67,7 @@ export default {
             <li class="messages" ${attr}>
                 <div ${attr}>${data.content}</div>
                 <div ${attr}>${data.username}</div>
+                <div ${attr}>${data.createdAt}</div>
             </li>`;
       var message = document.getElementById('msg-container');
       message.scrollTop += 200000;
