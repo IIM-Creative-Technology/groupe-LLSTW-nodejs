@@ -1,23 +1,15 @@
 <template>
-<div id="main">
-  <div id="nav">
-    <router-link to="/">Connexion</router-link> |
-    <router-link to="/about">Messagerie</router-link>
+  <div id="main">
+    <div id="nav"></div>
+    <router-view></router-view>
   </div>
-  <router-view></router-view> 
-</div>
 </template>
 
 <script>
-
-
 export default {
-  name:'App'
-  
-}
+  name: 'App',
+};
 </script>
-
-
 
 <style>
 #app {
