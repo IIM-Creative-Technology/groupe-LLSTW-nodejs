@@ -125,18 +125,20 @@ app.post('/api/messages/create', (req, res) => {
     client.connect(async (err) => {
         const content = req.body.content;
         const username = req.body.username;
-        const id = req.body.id;
+        //const id = req.body.id;
 
         console.log(content);
         console.log(username);
-        console.log(id);
+        //console.log(id);
 
         if (err) throw err;
-        const collection = client.db("IIM").collection("messages");
-        const requestUser = await collection.findOne({ "username": username, "id": id });
+        const collectionMessage = client.db("IIM").collection("messages");
+        const collectionUser = client.db("IIM").collection("users");
+        const requestUser = await collectionUser.findOne({ "username": username});
+        
         if (requestUser != null) {
             if (content && username) {
-                collection.insertOne({ "content": content, "username": username, createdAt: new Date()});
+                collectionMessage.insertOne({ "content": content, "username": username, createdAt: new Date()});
                 res.status(200).send("Message created");
             } else {
                 res.status(422).send('incomplete data');
