@@ -1,30 +1,29 @@
 <template>
-<div>
-    <h1>Messagerie</h1>
-  <ul id="messages">
-      <li>Coucou comment va ?</li>
-      <li>Bien et toi ?</li>
-      <li>Super merci, tu as pu voir pour push sur le repo ?</li>
-      <li>Non on a pas encore l'acces</li>
-      <li>Coucou comment va ?</li>
-      <li>Bien et toi ?</li>
-      <li>Super merci, tu as pu voir pour push sur le repo ?</li>
-      <li>Non on a pas encore l'acces</li>
-      <li>Coucou comment va ?</li>
-      <li>Bien et toi ?</li>
-      <li>Super merci, tu as pu voir pour push sur le repo ?</li>
-      <li>Non on a pas encore l'acces</li>
-      <li>Coucou comment va ?</li>
-      <li>Bien et toi ?</li>
-      <li>Super merci, tu as pu voir pour push sur le repo ?</li>
-      <li>Non on a pas encore l'acces</li>
-
-  </ul>
-  <form id="form" action="">
-    <input id="input" autocomplete="off" placeholder="Votre message ..." />
-    <button>Send</button>
-  </form>
-</div>
+    <div>
+        <h1>Messagerie</h1>
+        <ul id="bloc">
+            <li>Coucou comment va ?</li>
+            <li>Bien et toi ?</li>
+            <li>Super merci, tu as pu voir pour push sur le repo ?</li>
+            <li>Non on a pas encore l'acces</li>
+            <li>Coucou comment va ?</li>
+            <li>Bien et toi ?</li>
+            <li>Super merci, tu as pu voir pour push sur le repo ?</li>
+            <li>Non on a pas encore l'acces</li>
+            <li>Coucou comment va ?</li>
+            <li>Bien et toi ?</li>
+            <li>Super merci, tu as pu voir pour push sur le repo ?</li>
+            <li>Non on a pas encore l'acces</li>
+            <li>Coucou comment va ?</li>
+            <li>Bien et toi ?</li>
+            <li>Super merci, tu as pu voir pour push sur le repo ?</li>
+            <li>Non on a pas encore l'acces</li>
+        </ul>
+        <form id="form" action="">
+            <input id="input" autocomplete="off" placeholder="Votre message ..." />
+            <button id="but">Send</button>
+        </form>
+    </div>
 </template>
 
 <style scoped>
@@ -79,3 +78,5 @@
     }
 
 </style>
+
+
